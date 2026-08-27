@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+            <p class="flash"> {{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% for field in form %}
+      <br>
+      {{ field.label }}
+      {{ field }}
+    {% endfor %}
+  </form>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Page</title>
+</head>
+<body>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {% for field in form %}
+            <br>
+            {{ field.label }}
+            {{ field }}
+        {% endfor %}
+    </form>
+</body>
+</html>
