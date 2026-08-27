@@ -1,4 +1,4 @@
-# Monkey Boxing Club — Training Tracker
+# MBoxing Club — Training Tracker
 
 A full-stack web app I'm building to track personal training sessions for a boxing club in Hanoi, replacing a paid gym-management SaaS the club was only using for a fraction of its features. Built as part of my ongoing work through Angela Yu's 100 Days of Code bootcamp, extended well past the course curriculum.
 
