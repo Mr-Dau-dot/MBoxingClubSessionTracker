@@ -5,13 +5,68 @@
   <title>Create New Session</title>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <form method="POST">
       {{ form.hidden_tag() }}
       {% for field in form %}
-        <br>
-        {{ field.label }}
-        {{ field }}
+        {% if field.name == "coach_id" and current_user.role != "admin" %}
+        {% else %}
+            <br>
+            {{ field.label }}
+            {{ field }}
+        {% endif %}
       {% endfor %}
     </form>
+    <script>
+        const currentUserId = {{ current_user.id }}
+
+        const coachSelect = document.getElementById("coach_id");
+        const memberSelect = document.getElementById("member_id");
+        const packageSelect = document.getElementById("package");
+
+        PullData();
+
+        if (coachSelect) {
+            coachSelect.addEventListener("change", function () {
+                console.log("Changed coach, new value:", coachSelect.value);
+                PullData();
+            });
+        }
+
+        memberSelect.addEventListener("change", function () {
+            console.log("Change member, new value:", memberSelect.value);
+            PullData();
+        });
+
+        async function PullData() {
+            packageSelect.innerHTML = "";
+
+            const coachId = coachSelect
+                ? coachSelect.value
+                : currentUserId;
+
+            const response = await fetch(
+                `/package-for/${memberSelect.value}?coach_id=${coachId}`
+            );
+
+            const data = await response.json();
+
+            console.log(data);
+
+            for (const item of data) {
+            const option = document.createElement("option");
+            option.value = item.id;
+            option.textContent = item.label;
+            packageSelect.appendChild(option);
+            }
+        }
+
+    </script>
 </body>
 </html>

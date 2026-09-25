@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th> Time </th>
+            {% for coach in coach_row %}
+                <th>{{ coach.name }}</th>
+            {% endfor %}
+        </tr>
+        {% for hour in range(7,21) %}
+        <tr>
+            <td> {{ hour }}</td>
+            {% for coach in coach_row %}
+                <td>
+                    {% set cell = table[hour][coach.id] %}
+                    {% if cell == None %}
+                    {% elif current_user.role != "member" %}
+                    {{ cell["member_name"] }}
+                    {% elif cell["member_id"] == current_user.id %}
+                    {{ cell["member_name"] }}
+                    {% else %}
+                    {{ "Booked" }}
+                    {% endif %}
+<!--                    {{ table[hour][coach.id] or "" }}-->
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
