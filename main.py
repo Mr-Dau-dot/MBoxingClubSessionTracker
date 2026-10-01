@@ -29,7 +29,12 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return db.session.get(User, int(user_id))
+    user = db.session.get(User, int(user_id))
+    if not user or not user.status:
+        return None
+    else:
+        return user
+
 
 class User(UserMixin,db.Model):
     __tablename__ = "users"
@@ -146,6 +151,9 @@ def login():
             return redirect(url_for('login'))
         elif not check_password_hash(user.password_hash, password):
             flash('Password or email is incorrect, please try again.')
+            return redirect(url_for('login'))
+        elif not user.status:
+            flash("Your account has been locked by the system's admin, please contact us for more details.")
             return redirect(url_for('login'))
         else:
             login_user(user)
