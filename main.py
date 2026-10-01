@@ -92,6 +92,12 @@ def roles_required(*allowed_roles):
         return wrapped_view
     return decorator
 
+def active_users(role):
+    """List of the Users has not yet been locked - use for all dropdown."""
+    return db.session.execute(
+        db.select(User).where(User.role == role,User.status)
+    ).scalars().all()
+
 
 @app.route("/")
 def home():
@@ -167,11 +173,9 @@ def has_conflict(new_start, new_end, existing_sessions):
 @roles_required("coach","admin")
 def create_package():
     form = PackageForm()
-    member_results = db.session.execute(db.select(User).where(User.role == "member"))
-    coach_results = db.session.execute(db.select(User).where(User.role == "coach"))
-    members = member_results.scalars().all()
+    members = active_users("member")
     form.member_id.choices = [(0, "-- Member --")] + [(m.id, m.name) for m in members]
-    coach = coach_results.scalars().all()
+    coach = active_users("coach")
     form.coach_id.choices = [(0, "-- Coach --")] + [(c.id, c.name) for c in coach]
     if form.validate_on_submit():
         package = package_lookup(form.name.data)
@@ -230,12 +234,9 @@ def package_for_pair(member_id):
 @roles_required("coach","admin")
 def create_session():
     form = SessionForm()
-    member_results = db.session.execute(db.select(User).where(User.role == "member"))
-    coach_results = db.session.execute(db.select(User).where(User.role == "coach"))
-
-    members = member_results.scalars().all()
+    members = active_users("member")
     form.member_id.choices = [(0, "-- Member --")] + [(m.id, m.name) for m in members]
-    coach = coach_results.scalars().all()
+    coach = active_users("coach")
     form.coach_id.choices = [(0, "-- Coach --")] + [ (c.id,c.name) for c in coach]
 
     if current_user.role == "coach":
@@ -369,9 +370,9 @@ def update_session(session_id):
             notes=session_to_update.notes,
         )
 
-        members = db.session.execute(db.select(User).where(User.role == "member" )).scalars().all()
+        members = active_users("member")
         edit_form.member_id.choices = [(m.id, m.name) for m in members]
-        coach = db.session.execute(db.select(User).where(User.role == "coach" )).scalars().all()
+        coach = active_users("coach")
         edit_form.coach_id.choices = [(0, "-- Coach --")] + [(c.id,c.name) for c in coach]
 
         if edit_form.validate_on_submit():
