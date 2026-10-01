@@ -116,7 +116,7 @@ def sign_up():
         user = result.scalar()
 
         if user:
-            flash("Your email is already existed.")
+            flash("This email is already registered, please log in..")
             return redirect(url_for('login'))
 
         hash_and_salted_password = generate_password_hash(
@@ -158,7 +158,7 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(user)
-            return redirect(url_for('dash_board'))
+            return redirect(url_for('schedule'))
     return render_template("login.html",form=form, current_user=current_user)
 
 
