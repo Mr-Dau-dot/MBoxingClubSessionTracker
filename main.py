@@ -116,6 +116,7 @@ def sign_up():
         user = result.scalar()
 
         if user:
+            flash("Your email is already existed.")
             return redirect(url_for('login'))
 
         hash_and_salted_password = generate_password_hash(
@@ -135,7 +136,7 @@ def sign_up():
         db.session.commit()
 
         login_user(new_user)
-        return redirect(url_for("dash_board"))
+        return redirect(url_for("schedule"))
     return render_template('register.html',form=form, current_user=current_user)
 
 @app.route("/login", methods=["GET","POST"])
@@ -210,7 +211,7 @@ def create_package():
                 )
         db.session.add(new_package)
         db.session.commit()
-        return redirect(url_for("dash_board"))
+        return redirect(url_for("schedule"))
     return render_template("new_package.html",form=form)
 
 
@@ -313,7 +314,7 @@ def create_session():
 
         db.session.add(new_session)
         db.session.commit()
-        return redirect(url_for("dash_board"))
+        return redirect(url_for("schedule"))
     return render_template("new_session.html",form=form)
 
 @app.route('/sessions')
