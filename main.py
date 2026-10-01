@@ -5,7 +5,7 @@ from datetime import timedelta
 from sqlalchemy.exc import IntegrityError
 from functools import wraps
 from flask import Flask, request, render_template, abort, url_for, flash, session, jsonify
-from flask_login import UserMixin, LoginManager, login_user, login_required, current_user
+from flask_login import UserMixin, LoginManager, login_user, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, String, Text, Boolean, DateTime, Time, Date
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column, foreign
@@ -116,7 +116,7 @@ def sign_up():
         user = result.scalar()
 
         if user:
-            flash("This email is already registered, please log in..")
+            flash("This email is already registered, please log in.")
             return redirect(url_for('login'))
 
         hash_and_salted_password = generate_password_hash(
@@ -161,6 +161,10 @@ def login():
             return redirect(url_for('schedule'))
     return render_template("login.html",form=form, current_user=current_user)
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 @app.route("/dashboard")
 @login_required
@@ -456,7 +460,7 @@ def create_admin():
     admins = db.session.execute(db.select(User).where(User.email == email)).scalar()
 
     if admins:
-        print(f"You've already an admin")
+        print(f"You're already an admin")
     else:
         hash_and_salted_password = generate_password_hash(
             password,
