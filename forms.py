@@ -17,7 +17,7 @@ class RegisterForm(FlaskForm):
     email = EmailField(label="Email",validators=[DataRequired(),Email()])
     password = PasswordField(label="Password",validators=[DataRequired(),Length(min=8)])
     phone = StringField(label="Your phone number",validators=[DataRequired()])
-    submit = SubmitField("Registered")
+    submit = SubmitField("Create Account")
 
 
 class SessionForm(FlaskForm):
