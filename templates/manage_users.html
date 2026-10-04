@@ -5,6 +5,13 @@
     <title>Manage User</title>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+            <p class="flash"> {{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <table>
         <tr>
             <th> Name </th>
@@ -27,5 +34,6 @@
         </tr>
         {% endfor %}
     </table>
+    <a href="{{ url_for('create_coach') }}"> Create Coach </a>
 </body>
 </html>
