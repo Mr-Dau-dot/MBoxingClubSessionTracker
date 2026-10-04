@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage User</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th> Name </th>
+            <th> Email </th>
+            <th> Role </th>
+            <th> Status </th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td> {{user.name}} </td>
+            <td> {{user.email}} </td>
+            <td> {{user.role}} </td>
+            <td>
+                {% if not user.status %}
+                    Locked
+                {% else %}
+                    Active
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
