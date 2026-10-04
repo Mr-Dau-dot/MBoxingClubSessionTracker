@@ -496,17 +496,17 @@ def toggle_status(user_id):
     user.status = not user.status
 
     if user.status:
-        flash (f"Unlocked{user.name} ({user.role})")
+        flash (f"Unlocked {user.name} ({user.role})")
     else:
         if user.role == "coach":
             person_filter = TrainingSession.coach_id == user_id
         else:
             person_filter = TrainingSession.member_id == user_id
-            remaining = db.session.execute(
-                db.select(TrainingSession).where(TrainingSession.date >= datetime.date.today() #personally I think we need to subtract with timedelta for this
-                                                 ,TrainingSession.session_status == "scheduled"
-                                                 ,person_filter)).scalars().all()
-            flash(f"Locked {user.name} ({user.role}), {len(remaining)} upcoming sessions")
+        remaining = db.session.execute(
+            db.select(TrainingSession).where(TrainingSession.date >= datetime.date.today() #personally I think we need to subtract with timedelta for this
+                                             ,TrainingSession.session_status == "scheduled"
+                                             ,person_filter)).scalars().all()
+        flash(f"Locked {user.name} ({user.role}), {len(remaining)} upcoming sessions")
     db.session.commit()
     return redirect(url_for("manage_users"))
 
