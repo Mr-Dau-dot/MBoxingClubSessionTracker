@@ -443,6 +443,16 @@ def schedule():
     return render_template("schedule.html",table=table,coach_row=coach_row)
 
 
+@app.route("/admin")
+@login_required
+@roles_required("admin")
+def manage_users():
+    get_user = db.session.execute(db.select(User).order_by(User.role))
+    users = get_user.scalars().all()
+    return render_template("manage_users.html", users = users)
+
+
+
 @app.route("/report")
 @login_required
 @roles_required("coach","admin")
