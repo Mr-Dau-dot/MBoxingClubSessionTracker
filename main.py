@@ -452,6 +452,39 @@ def manage_users():
     return render_template("manage_users.html", users = users)
 
 
+@app.route("/admin/create-coach",methods=["GET","POST"])
+@login_required
+@roles_required("admin")
+def create_coach():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        result = db.session.execute(db.select(User).where(User.email == form.email.data))
+        user = result.scalar()
+
+        if user:
+            flash("This email is already registered to another account")
+            return render_template("coach_register.html", form=form)
+
+        hash_and_salted_password = generate_password_hash(
+            form.password.data,
+            method='pbkdf2:sha256',
+            salt_length=8
+        )
+        new_coach = User(
+            email=form.email.data,
+            name=form.name.data,
+            password_hash=hash_and_salted_password,
+            phone=form.phone.data,
+            role="coach"
+
+        )
+        db.session.add(new_coach)
+        db.session.commit()
+        flash("New Coach is added to the club")
+        return redirect(url_for("manage_users"))
+    return render_template("coach_register.html",form=form)
+
+
 
 @app.route("/report")
 @login_required
