@@ -484,7 +484,31 @@ def create_coach():
         return redirect(url_for("manage_users"))
     return render_template("coach_register.html",form=form)
 
+@app.route("/admin/toggle-status/<int:user_id>",methods=["POST"])
+@login_required
+@roles_required("admin")
+def toggle_status(user_id):
+    user = db.get_or_404(User, user_id)
+    if user_id == current_user.id:
+        flash("Can not take action")
+        return redirect(url_for("manage_users"))
 
+    user.status = not user.status
+
+    if user.status:
+        flash (f"Unlocked{user.name} ({user.role})")
+    else:
+        if user.role == "coach":
+            person_filter = TrainingSession.coach_id == user_id
+        else:
+            person_filter = TrainingSession.member_id == user_id
+            remaining = db.session.execute(
+                db.select(TrainingSession).where(TrainingSession.date >= datetime.date.today() #personally I think we need to subtract with timedelta for this
+                                                 ,TrainingSession.session_status == "scheduled"
+                                                 ,person_filter)).scalars().all()
+            flash(f"Locked {user.name} ({user.role}), {len(remaining)} upcoming sessions")
+    db.session.commit()
+    return redirect(url_for("manage_users"))
 
 @app.route("/report")
 @login_required
