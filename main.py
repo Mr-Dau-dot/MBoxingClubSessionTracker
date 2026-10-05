@@ -7,6 +7,7 @@ from functools import wraps
 from flask import Flask, request, render_template, abort, url_for, flash, session, jsonify
 from flask_login import UserMixin, LoginManager, login_user, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 from sqlalchemy import Integer, String, Text, Boolean, DateTime, Time, Date
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column, foreign
 from dotenv import load_dotenv
@@ -23,7 +24,9 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 app.config["SECRET_KEY"] = os.environ.get("LOGIN_KEY")
 
+csrf = CSRFProtect(app)
 db = SQLAlchemy(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -490,7 +493,7 @@ def create_coach():
 def toggle_status(user_id):
     user = db.get_or_404(User, user_id)
     if user_id == current_user.id:
-        flash("Can not take action")
+        flash("Can not take action with admin account")
         return redirect(url_for("manage_users"))
 
     user.status = not user.status
@@ -503,7 +506,7 @@ def toggle_status(user_id):
         else:
             person_filter = TrainingSession.member_id == user_id
         remaining = db.session.execute(
-            db.select(TrainingSession).where(TrainingSession.date >= datetime.date.today() #personally I think we need to subtract with timedelta for this
+            db.select(TrainingSession).where(TrainingSession.date >= datetime.date.today()
                                              ,TrainingSession.session_status == "scheduled"
                                              ,person_filter)).scalars().all()
         flash(f"Locked {user.name} ({user.role}), {len(remaining)} upcoming sessions")
