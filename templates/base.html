@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{% block title %} Monkey {% endblock %}</title>
+        {% endblock %}
+    </head>
+    <body>
+    <nav>
+        {% if current_user.is_authenticated %}
+            <a href="{{url_for('schedule') }}"> Schedule </a>
+            <a href="{{url_for('show_sessions') }}"> Session </a>
+            {% if current_user.role != "member" %}
+            <a href="{{ url_for('create_session')}}">Create Session</a>
+            <a href="{{ url_for('create_package')}}">Create Package</a>
+            {% endif %}
+            {% if current_user.role == "admin" %}
+            <a href="{{ url_for('manage_users') }}"> Manage Users</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}">Log Out</a>
+        {% else %}
+            <a href="{{ url_for('login') }}"> Login </a>
+            <a href="{{ url_for('sign_up') }}"> Register </a>
+        {% endif %}
+    </nav>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="flash"> {{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %} {% endblock %}
+    </body>
+</html>

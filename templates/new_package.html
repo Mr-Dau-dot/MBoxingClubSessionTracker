@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Creating Package</title>
-</head>
+{% extends "base.html" %}
+
+{% block title %} Creating Package {% endblock %}
+
+{% block content %}
 <body>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-          <p>{{ message }}</p>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
     <form method="POST">
       {{ form.hidden_tag() }}
       {% for field in form %}
@@ -24,4 +16,4 @@
       {% endfor %}
     </form>
 </body>
-</html>
+{% endblock %}

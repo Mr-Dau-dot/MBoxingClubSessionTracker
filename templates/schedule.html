@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Schedule</title>
-</head>
+{% extends "base.html" %}
+
+{% block title %} Schedule {% endblock %}
+{% block content %}
 <body>
     <table>
         <tr>
@@ -26,11 +24,10 @@
                     {% else %}
                     {{ "Booked" }}
                     {% endif %}
-<!--                    {{ table[hour][coach.id] or "" }}-->
                 </td>
             {% endfor %}
         </tr>
         {% endfor %}
     </table>
 </body>
-</html>
+{% endblock %}

@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Manage User</title>
-</head>
+{% extends "base.html" %}
+
+{% block title %} Manage User {% endblock %}
+
+{% block content %}
 <body>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-            <p class="flash"> {{ message }}</p>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
     <table>
         <tr>
             <th> Name </th>
@@ -51,4 +43,5 @@
     </table>
     <a href="{{ url_for('create_coach') }}"> Create Coach </a>
 </body>
-</html>
+
+{% endblock %}

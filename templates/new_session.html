@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Create New Session</title>
-</head>
+{% extends "base.html" %}
+
+{%block title%} New Session {% endblock %}
+
+{% block content %}
 <body>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -69,4 +68,5 @@
 
     </script>
 </body>
-</html>
+
+{% endblock %}
