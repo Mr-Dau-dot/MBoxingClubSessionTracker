@@ -3,13 +3,12 @@
 {% block title %} Registering New Coach {% endblock %}
 
 {% block content %}
-<body>
      <form method="POST">
     {{ form.hidden_tag() }}
+    {% for field in form %}
       <br>
       {{ field.label }}
       {{ field }}
     {% endfor %}
      </form>
-</body>
 {% endblock %}

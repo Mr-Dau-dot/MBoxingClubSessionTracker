@@ -3,14 +3,6 @@
 {%block title%} New Session {% endblock %}
 
 {% block content %}
-<body>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-          <p>{{ message }}</p>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
     <form method="POST">
       {{ form.hidden_tag() }}
       {% for field in form %}
@@ -67,6 +59,4 @@
         }
 
     </script>
-</body>
-
 {% endblock %}

@@ -3,7 +3,6 @@
 {% block title %} Creating Package {% endblock %}
 
 {% block content %}
-<body>
     <form method="POST">
       {{ form.hidden_tag() }}
       {% for field in form %}
@@ -15,5 +14,4 @@
         {% endif %}
       {% endfor %}
     </form>
-</body>
 {% endblock %}

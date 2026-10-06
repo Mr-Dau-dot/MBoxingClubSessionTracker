@@ -3,7 +3,6 @@
 {% block title %} Manage User {% endblock %}
 
 {% block content %}
-<body>
     <table>
         <tr>
             <th> Name </th>
@@ -42,6 +41,4 @@
         {% endfor %}
     </table>
     <a href="{{ url_for('create_coach') }}"> Create Coach </a>
-</body>
-
 {% endblock %}
