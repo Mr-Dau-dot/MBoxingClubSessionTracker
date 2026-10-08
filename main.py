@@ -2,11 +2,8 @@ import datetime
 import click
 from functools import wraps
 from flask import Flask, request, render_template, abort, url_for, flash, session, jsonify
-from flask_login import UserMixin, LoginManager, login_user, login_required, current_user, logout_user
-from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from flask_wtf.csrf import CSRFProtect
-from sqlalchemy import Integer, String, Text, Boolean, DateTime, Time, Date
-from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column, foreign
 from dotenv import load_dotenv
 from werkzeug.utils import redirect
 from helpers import parse_session_time, duration_minutes_calculated, package_lookup
@@ -393,7 +390,6 @@ def schedule():
         end_hour_cutoff = min(end_hour_cutoff, 21)
         for h in range(hour_stamp, end_hour_cutoff):
             table[h][session.coach_id] = {"member_id": session.member_id, "member_name": session.member.name}
-    print(table)
     return render_template("schedule.html",table=table,coach_row=coach_row)
 
 

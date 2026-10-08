@@ -1,9 +1,8 @@
 import datetime
-from flask_login import UserMixin, LoginManager
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Integer, String, Text, Boolean, DateTime, Time, Date
-from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column, foreign
-from flask import Flask
+from sqlalchemy import Integer, String,  Boolean, DateTime, Time, Date
+from sqlalchemy.orm import relationship, Mapped, mapped_column, foreign
 
 db = SQLAlchemy()
 class User(UserMixin,db.Model):
