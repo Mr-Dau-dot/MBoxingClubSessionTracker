@@ -15,7 +15,7 @@ def test_so_phut():
     duration = duration_minutes_calculated(datetime.time(8,0), datetime.time(9,30))
     assert duration == 90
 
-def test_packaage():
+def test_package():
     name, session = package_lookup(3)
     assert name == "Warrior"
     assert session == 100
