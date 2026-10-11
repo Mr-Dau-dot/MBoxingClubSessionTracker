@@ -1,5 +1,6 @@
 import datetime
 import click
+from rules import blocking_sessions
 from functools import wraps
 from flask import Flask, request, render_template, abort, url_for, flash, session, jsonify
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
@@ -255,15 +256,10 @@ def create_session():
                     package_id= form.package.data
                 )
 
-        existing_sessions = db.session.execute(
-            (db.select(TrainingSession).where(
-                TrainingSession.date == new_session.date,
-                TrainingSession.coach_id == new_session.coach_id)
-            )
-        ).scalars().all()
+        existing_session = blocking_sessions(new_session.date, new_session.coach_id)
         if has_conflict(time_data[0],
                         time_data[1],
-                        existing_sessions):
+                        existing_session):
             flash("Slot is already booked!")
             return render_template("new_session.html",form=form)
 
@@ -354,13 +350,9 @@ def update_session(session_id):
                 session_to_update.notes = edit_form.notes.data
                 #session_to_update.package_id = edit_form.package.data
 
-                existing_sessions = db.session.execute(
-                    (db.select(TrainingSession).where(
-                        TrainingSession.date == session_to_update.date,
-                        TrainingSession.coach_id == session_to_update.coach_id,
-                        TrainingSession.id != session_to_update.id)
-                    )
-                ).scalars().all()
+                existing_sessions = blocking_sessions(session_to_update.date,
+                                                      session_to_update.coach_id,
+                                                      session_to_update.id)
                 if has_conflict(time_data[0],
                                 time_data[1],
                                 existing_sessions):

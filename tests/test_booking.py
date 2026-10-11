@@ -1,4 +1,6 @@
 import datetime
+from itertools import count
+
 from main import app
 from models import db, TrainingSession
 
@@ -35,4 +37,11 @@ def test_trung_gio_bi_chan(client,ids):
     response = client.post("/create-session",data=booking_form(ids))
     assert "Slot is already booked" in response.get_data(as_text=True)
     assert count_sessions() == 1   #buổi thứ 2 KHÔNG được lưu
-    
+
+def test_buoi_da_huy_khong_chiem_gio(client,ids):
+    login(client, "coach@monkey.com")
+    client.post("/create-session", data=booking_form(ids))
+    client.post("/cancel-session/1")
+    response = client.post("/create-session", data=booking_form(ids))
+    assert response.status_code == 302
+    assert count_sessions() == 2
